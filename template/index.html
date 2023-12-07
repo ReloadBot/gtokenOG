@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Credenciais</title>
+</head>
+<body>
+    <h1>Upload de Credenciais</h1>
+    
+	{% if client_id and client_secret %}
+        <p>Client ID: {{ client_id }}</p>
+        <p>Client Secret: {{ client_secret }}</p>
+    {% endif %}
+	
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if authorize_url %}
+        <p>
+            Por favor, visite esta URL para autorizar este aplicativo:
+            <a href="{{ authorize_url }}" target="_blank">{{ authorize_url }}</a>
+        </p>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('generate_token') }}" enctype="multipart/form-data">
+        <label for="credentials">Escolha o arquivo credentials.json:</label>
+        <input type="file" name="file" id="credentials" accept=".json" required>
+        <button type="submit">Enviar</button>
+    </form>
+	
+	<form action="/complete_auth" method="get">
+        <label for="google_url">Google Authorization URL:</label>
+        <input type="text" name="google_url" id="google_url" required>
+		<button type="submit">Complete Authentication</button>
+        <br>
+
+</body>
+</html>
